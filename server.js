@@ -32,41 +32,6 @@ async function startServer() {
 
 startServer()
 
-
-// const User = mongoose.model('User', userSchema);
-// const Recipe = mongoose.model('Recipe', recipeSchema);
-
-
-// //Rotas
-// app.post('/register', async (req, res) => {
-//     const { username, password } = req.body;
-//     const user = new User({ username, password });
-//     await user.save();
-//     res.status(201).send('User registered');
-// });
-
-// app.post('/login', async (req, res) => {
-//     const { username, password } = req.body;
-//     const user = await User.findOne({ username, password });
-//     if (user) {
-//         res.status(200).send('Login successful');
-//     } else {
-//         res.status(401).send('Invalid credentials');
-//     }
-// });
-
-// app.post('/recipe', async (req, res) => {
-//     const { title, type, ingredients, preparation } = req.body;
-//     const recipe = new Recipe({ title, type, ingredients, preparation });
-//     await recipe.save();
-//     res.status(201).send('Recipe created');
-// });
-
-// app.get('/recipes', async (req, res) => {
-//     const recipes = await Recipe.find();
-//     res.status(200).json(recipes);
-// });
-
-// app.listen(port, () => {
-//     console.log(`Servidor rodando na porta ${port}`);
-// });
+app.listen(port, () => {
+    console.log(`Servidor rodando na porta ${port}`);
+});
