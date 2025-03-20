@@ -5,9 +5,9 @@ const recipeSchema = new mongoose.Schema({
   ingredientes: [String],
   modoPreparo: String,
   categorias: [String],
-  avaliacoes: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' }, nota: Number }],
-  comentarios: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' }, texto: String }],
-  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario' },
+  avaliacoes: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, nota: Number }],
+  comentarios: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, texto: String }],
+  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema, 'receitas');

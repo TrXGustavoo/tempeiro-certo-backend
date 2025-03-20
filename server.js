@@ -5,6 +5,7 @@ const cors = require('cors')
 const connectDB = require('./config/database')
 const userRoutes = require('./routes/user_routes')
 const receitasRoutes = require('./routes/recipe_routes')
+const authRoutes = require('./routes/auth')
 
 
 const app = express()
@@ -17,6 +18,7 @@ app.use(bodyParser.json())
 // Rotas
 app.use('/users', userRoutes)
 app.use('/recipe', receitasRoutes)
+app.use('/auth', authRoutes)
 
 
 async function startServer() {

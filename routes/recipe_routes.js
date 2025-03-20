@@ -4,8 +4,9 @@ const receitasController = require('../controllers/recipe_controller');
 const recipe = require('../models/recipe')
 
 router.get('/', receitasController.listarReceitas);
-router.post('/', receitasController.criarReceita);
+router.post('/:id_usuario', receitasController.criarReceita);
 router.put('/:id', receitasController.editarReceita);
+router.put('/:id', receitasController.adicionarComentario);
 router.delete('/:id', receitasController.deleteReceita);
 
 

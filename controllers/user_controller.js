@@ -53,6 +53,24 @@ async function editUser(req, res) {
 }
 
 
+async function favoritarReceita(req, res) {
+    try {
+        const id_receita = req.params.id_receita
+        const id_user = req.params.id_user
+
+        const receita = await Receita.findById(id_receita)
+        if (!receita) {
+            return res.status(404).json({message: 'Receita não encontrada'})
+        }
+
+        const user_atualizado = await User.findByIdAndUpdate(id_user, { $addToSet: {favorites: id_receita} }, {new:true})
+
+        res.status(200).json(user_atualizado)
+    } catch (error) {
+        console.log('Erro ao favoritar receita', error)
+    }
+}
+
 
 module.exports = {
     createUser,
@@ -60,4 +78,5 @@ module.exports = {
     deleteUser,
     getUserById,
     editUser,
+    favoritarReceita
 };
