@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 async function connectDB(){
     try {
-        const url = "mongodb+srv://tempeiro-certo:mfOZWUgBb8uDw7uX@cluster0.sidbo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+        const url = "mongodb+srv://tempeiro-certo:mfOZWUgBb8uDw7uX@cluster0.sidbo.mongodb.net/tempeiro-certo-db?retryWrites=true&w=majority";
         const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
 
         await mongoose.connect(url, clientOptions)

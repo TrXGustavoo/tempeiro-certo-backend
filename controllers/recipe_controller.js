@@ -42,6 +42,11 @@ async function editarReceita(req, res) {
   try {
     const id_receita = req.params.id;
 
+    const receita = await Receita.findByIdAndUpdate(id_receita, req.body, {new: true})
+    if (!receita) {
+      return res.status(404).send('usuario nao encontrado')
+    }
+    res.send(receita)
     console.log('Receita editada com sucesso')
   } catch (err) {
     console.log('Erro ao editar receita', err);

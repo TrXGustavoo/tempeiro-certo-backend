@@ -8,7 +8,7 @@ const receitasRoutes = require('./routes/recipe_routes')
 
 
 const app = express()
-const port = 3000
+const port = 8080
 
 app.use(cors())
 app.use(bodyParser.json())
@@ -32,6 +32,3 @@ async function startServer() {
 
 startServer()
 
-app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-});
