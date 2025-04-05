@@ -5,7 +5,7 @@ const cors = require('cors')
 const connectDB = require('./config/database')
 const userRoutes = require('./routes/user_routes')
 const receitasRoutes = require('./routes/recipe_routes')
-const authRoutes = require('./routes/auth')
+const authRoutes = require('./routes/auth_routes')
 
 
 const app = express()
