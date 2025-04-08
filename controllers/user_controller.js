@@ -1,15 +1,5 @@
 const User = require('../models/user')
 
-async function createUser(req, res) {
-    const user = new User(req.body)
-    try {
-        const newUser = await user.save()
-        res.status(201).json(newUser);
-
-    } catch (error) {
-        return res.status(400).send(error.message)
-    }
-}
 
 async function getAllUser(req, res) {
     try {
@@ -73,7 +63,6 @@ async function favoritarReceita(req, res) {
 
 
 module.exports = {
-    createUser,
     getAllUser,
     deleteUser,
     getUserById,

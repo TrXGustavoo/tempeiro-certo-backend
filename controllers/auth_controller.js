@@ -2,6 +2,10 @@ const express = require("express")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const User = require("../models/user")
+const app = express();
+
+
+app.use(express.json());
 
 
 //Função para registrar o usuario
@@ -21,7 +25,7 @@ const register = async (req, res) => {
         //Cria o novo usuario
         const new_user = new User({
             username,
-            hashed_password,
+            password: hashed_password,
             genero
         })
         await new_user.save()
@@ -40,17 +44,28 @@ const login = async (req, res) => {
     try {
         const {username, password} = req.body
 
+        
         //Encontrar o usuario pelo username
         const user = await User.findOne({username})
+    
+        
+
         if (!user) {
 
             return res.status(401).json({message: 'Usuario nao encontrado'})
         }
+
+        console.log(user)
+
         const password_valid = await bcrypt.compare(password, user.password)
+
+
         if (!password_valid) {
             return res.status(401).json({message: 'Senha invalida'})
         }
 
+        
+    
         const token = jwt.sign(
             { userId: user._id, username: user.username },
             process.env.SECRET_KEY || '12345678',
@@ -59,7 +74,7 @@ const login = async (req, res) => {
 
         return res.status(200).json({token, message: 'Login realizado com sucesso'})
     } catch (error) {
-        console.log("Erro ao realizar login")
+        console.log("Erro ao realizar login", error)
         return res.status(500).json({message: 'Erro ao realizar login'})
     }
 }
