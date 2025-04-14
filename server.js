@@ -24,13 +24,14 @@ app.use('/auth', authRoutes)
 async function startServer() {
     try {
         await connectDB()
-        app.listen(port, () => {
-            console.log(`Servidor rodando na porta ${port}`)
-        })
+        // app.listen(port, () => {
+        //     console.log(`Servidor rodando na porta ${port}`)
+        // })
     } catch (error) {
         console.error('Erro ao iniciar servidor', error)
     }
 }
 
 startServer()
+module.exports = app;
 
