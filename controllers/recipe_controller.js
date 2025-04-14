@@ -15,16 +15,21 @@ async function criarReceita(req, res) {
       // O ID do usuário autenticado estará disponível em req.userId
       const userId = req.userId;
 
-      const { nome, ingredientes, modoPreparo, categorias } = req.body;
+      const { recipeName, ingredients, prepTime, description, portions, level, categorias} = req.body;
 
-      if (!nome || !ingredientes || !modoPreparo || !categorias) {
-          return res.status(400).json({ message: 'Todos os campos obrigatórios devem ser preenchidos' });
-      }
+      // if (!nome || !ingredientes || !modoPreparo || !categorias) {
+      //     return res.status(400).json({ message: 'Todos os campos obrigatórios devem ser preenchidos' });
+      // }
+
+      console.log("Dados da receita", req.body);
 
       const receita = new Receita({
-          nome,
-          ingredientes,
-          modoPreparo,
+          recipeName,
+          ingredients,
+          prepTime,
+          description,
+          portions,
+          level,
           categorias,
           usuario: userId // Linkando a receita ao usuário autenticado
       });

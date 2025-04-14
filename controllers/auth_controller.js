@@ -44,6 +44,8 @@ const login = async (req, res) => {
     try {
         const {username, password} = req.body
 
+        console.log("Dados do login", req.body)
+
         
         //Encontrar o usuario pelo username
         const user = await User.findOne({username})
@@ -55,9 +57,9 @@ const login = async (req, res) => {
             return res.status(401).json({message: 'Usuario nao encontrado'})
         }
 
-        console.log(user)
 
         const password_valid = await bcrypt.compare(password, user.password)
+
 
 
         if (!password_valid) {
@@ -71,6 +73,8 @@ const login = async (req, res) => {
             process.env.SECRET_KEY || '12345678',
             { expiresIn: '1h' }
         )
+
+        
 
         return res.status(200).json({token, message: 'Login realizado com sucesso'})
     } catch (error) {
