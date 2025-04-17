@@ -30,7 +30,17 @@ const register = async (req, res) => {
         })
         await new_user.save()
 
-        return res.status(201).json({message: 'Registrado com sucesso'})
+        const user = await User.findOne({username})
+
+        const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            process.env.SECRET_KEY || '12345678',
+            { expiresIn: '1h' }
+        )
+
+
+        console.log("Usuario cadastrado com sucesso", new_user, token)
+        return res.status(201).json({ token, message: 'Registrado com sucesso', userId: user._id })
 
     } catch (error) {
         console.log("Erro ao cadastrar usuario", error)
@@ -75,8 +85,8 @@ const login = async (req, res) => {
         )
 
         
-
-        return res.status(200).json({token, message: 'Login realizado com sucesso'})
+        console.log("Token gerado", token)
+        return res.status(200).json({token, message: 'Login realizado com sucesso', userId: user._id})
     } catch (error) {
         console.log("Erro ao realizar login", error)
         return res.status(500).json({message: 'Erro ao realizar login'})

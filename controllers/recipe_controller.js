@@ -1,5 +1,6 @@
 const { json } = require('body-parser');
 const Receita = require('../models/recipe');
+const User = require('../models/user');
 
 async function listarReceitas(req, res) {
   try {
@@ -12,10 +13,12 @@ async function listarReceitas(req, res) {
 
 async function criarReceita(req, res) {
   try {
-      // O ID do usuário autenticado estará disponível em req.userId
+      
       const userId = req.userId;
 
       const { recipeName, ingredients, prepTime, description, portions, level, categorias} = req.body;
+
+      console.log("Dados da receita", req.body);
 
       // if (!nome || !ingredientes || !modoPreparo || !categorias) {
       //     return res.status(400).json({ message: 'Todos os campos obrigatórios devem ser preenchidos' });
@@ -31,14 +34,15 @@ async function criarReceita(req, res) {
           portions,
           level,
           categorias,
-          usuario: userId // Linkando a receita ao usuário autenticado
+          usuario: userId 
       });
 
       const novaReceita = await receita.save();
 
-      // Opcional: Popular o campo 'usuario' na resposta para ter os detalhes do criador
-      await novaReceita.populate('usuario', 'username'); // Exemplo: mostrar apenas o username
+      
+      await novaReceita.populate('usuario', 'username'); 
 
+      console.log('Receita criada com sucesso:', novaReceita);
       res.status(201).json(novaReceita);
   } catch (err) {
       console.error("erro ao criar receita:", err);
@@ -46,14 +50,32 @@ async function criarReceita(req, res) {
   }
 }
 
+// async function getReceitaById(req, res) {
+//   try {
+//     const receita = await Receita.findById(req.params.id);
+//     res.json(receita);
+//   } catch (err) {
+//     console.log('erro ao exibir receita', err);
+//   }
+// }
+
 async function getReceitaById(req, res) {
   try {
-    const receita = await Receita.findById(req.params.id);
+    const receita = await Receita.findById(req.params.id)
+      .populate('usuario', 'username') // Popula o criador da receita
+      .populate('comentarios.usuario', 'username'); // Popula o autor de cada comentário
+
+    if (!receita) {
+      return res.status(404).json({ message: 'Receita não encontrada' });
+    }
+
     res.json(receita);
   } catch (err) {
-    console.log('erro ao exibir receita', err);
+    console.log('Erro ao exibir receita:', err);
+    res.status(500).json({ message: 'Erro ao buscar a receita' });
   }
 }
+
 
 async function deleteReceita(req, res) {
   try {
@@ -107,9 +129,9 @@ async function editarReceita(req, res) {
 
 async function adicionarComentario(req, res) {
   try {
-      const id_usuario = req.userId; // ID do usuário autenticado
-      const id_receita = req.params.id_receita;
-      const { texto } = req.body; // Assumindo que o comentário tem um campo 'texto'
+      const id_usuario = req.userId; 
+      const id_receita = req.params.recipeId;
+      const { texto } = req.body; 
 
       // 1. Verificar se a receita existe
       const receita = await Receita.findById(id_receita);
@@ -137,11 +159,46 @@ async function adicionarComentario(req, res) {
           return res.status(500).json({ message: 'Erro ao adicionar o comentário' });
       }
 
+
+      console.log('Comentário adicionado com sucesso:', receitaAtualizada);
       return res.status(200).json({ message: 'Comentário adicionado com sucesso', receita: receitaAtualizada });
 
   } catch (error) {
       console.error('Erro ao adicionar comentário:', error);
       return res.status(500).json({ message: 'Erro ao adicionar o comentário' });
+  }
+}
+
+async function listarReceitasDoUsuario(req, res) {
+  try {
+    const userId = req.userId; // Pega o ID do usuário autenticado via JWT
+    const receitas = await Receita.find({ usuario: userId });
+    res.json(receitas);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+
+async function listarReceitasFavoritas(req, res) {
+  try {
+    const userId = req.userId;
+
+    // Buscar o usuário e popular as receitas favoritas
+    const user = await User.findById(userId).populate({
+      path: 'favorites',
+      populate: { path: 'usuario', select: 'username' } // Popula o criador da receita
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    console.log('Receitas favoritas:', user.favorites);
+    res.status(200).json(user.favorites);
+  } catch (error) {
+    console.error('Erro ao buscar receitas favoritas:', error);
+    res.status(500).json({ message: 'Erro ao buscar receitas favoritas' });
   }
 }
 
@@ -152,4 +209,6 @@ module.exports = {
   deleteReceita,
   editarReceita,
   adicionarComentario,
+  listarReceitasDoUsuario,
+  listarReceitasFavoritas
 };

@@ -7,10 +7,10 @@ const recipeSchema = new mongoose.Schema({
   description: String,
   portions: Number,
   level: String,
-  image: String,
+  recipeImage: String,
   categorias: [String],
   avaliacoes: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, nota: Number }],
-  comentarios: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, texto: String }],
+  comentarios: [{ usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, texto: String, dataCriacao: { type: Date, default: Date.now } }],
   usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
